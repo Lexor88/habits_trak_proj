@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 # Загружаем переменные из .env
 load_dotenv()
@@ -20,9 +21,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-default-key")  # Испо�
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", default="True") == "True"  # Загружаем DEBUG из .env, по умолчанию True
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")  # Разделяем ALLOWED_HOSTS
-
-# Application definition
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -32,11 +31,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",  # API
+    'rest_framework.authtoken',
     "corsheaders",  # CORS
     "users",  # Приложение пользователей
     "habits",  # Приложение привычек
     "config",  # Приложение конфигурации
     "django_celery_beat",
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -114,9 +115,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.CustomUser"
 
 # Celery settings
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/0")
-CELERY_TIMEZONE = os.getenv("CELERY_TIMEZONE", "UTC")
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Настройка для подключения к Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Настройки для периодических задач через Celery Beat
+CELERY_BEAT_SCHEDULE = {
+    'send-reminders-every-day': {
+        'task': 'habits.tasks.send_habit_reminders',  # Задача, которую нужно выполнять
+        'schedule': crontab(minute=0, hour=9),  # Выполняем каждый день в 9 утра
+    },
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]  # Set specific allowed origins if needed
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}

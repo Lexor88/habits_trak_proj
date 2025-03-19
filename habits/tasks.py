@@ -22,6 +22,8 @@ def send_habit_reminders():
 
     for habit in habits:
         print(f"📤 Отправляем сообщение для {habit.user}")  # Логируем пользователя
+        # Добавляем вывод отладочного сообщения
+        print("Sending reminder task for user:", habit.user)  # Это строка для отладки
         if habit.user.telegram_chat_id:
             message = f"🔔 Напоминание: {habit.action} в {habit.place}"
             response = requests.post(

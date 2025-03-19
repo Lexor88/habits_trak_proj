@@ -16,15 +16,12 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.conf.beat_schedule = {
     "send-reminders-every-day": {
         "task": "habits.tasks.send_habit_reminders",  # Указываем путь к задаче
-        "schedule": crontab(
-            minute=0, hour=9
-        ),  # Отправка напоминаний каждый день в 9 утра
+        "schedule": crontab(minute=0, hour=9),  # Отправка напоминаний каждый день в 9 утра
     },
 }
 
 # Автоматически обнаруживаем задачи в приложениях Django
 app.autodiscover_tasks()
-
 
 @app.task(bind=True)
 def debug_task(self):
