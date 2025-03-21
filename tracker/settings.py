@@ -71,14 +71,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tracker.wsgi.application"
 
-# Database settings
+# Используем строку подключения из .env файла
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",  # Assuming you are using PostgreSQL
-        "NAME": os.getenv("DB_NAME", "default_db_name"),
-        "USER": os.getenv("DB_USER", "default_user"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "default_password"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", "my_database"),
+        "USER": os.getenv("DB_USER", "my_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "my_password"),
+        "HOST": os.getenv("DB_HOST", "db"),
         "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
