@@ -39,6 +39,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set environment variables
+        run: |
+          echo "DB_NAME=my_database" >> $GITHUB_ENV
+          echo "DB_USER=my_user" >> $GITHUB_ENV
+          echo "DB_PASSWORD=my_password" >> $GITHUB_ENV
+          echo "DB_HOST=postgres" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+
       - name: Install Dependencies
         run: |
           python -m venv venv
@@ -46,9 +54,16 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Wait for DB to be ready
+        run: |
+          until pg_isready -h postgres -U habit_user -d habit_db; do
+            echo "Waiting for database to be ready..."
+            sleep 2
+          done
+
       - name: Run Migrations
         env:
-          DATABASE_URL: postgres://habit_user:habit_password@localhost:5432/habit_db
+          DATABASE_URL: postgres://habit_user:habit_password@postgres:5432/habit_db
         run: |
           source venv/bin/activate
           python manage.py migrate
