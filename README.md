@@ -59,7 +59,7 @@ ALLOWED_HOSTS=127.0.0.1, .localhost
 
 TELEGRAM_BOT_TOKEN=your_telegram_token
 
-3. спользование Docker
+3. Использование Docker
 
 Для упрощения процесса развертывания проекта, используйте Docker. Убедитесь, что у вас установлен Docker и Docker
 Compose.
