@@ -1,8 +1,8 @@
-Habit Tracker
+Habit config
 
 Описание
 
-Проект Habit Tracker — это веб-приложение для отслеживания полезных привычек. Пользователи могут создавать привычки,
+Проект Habit config — это веб-приложение для отслеживания полезных привычек. Пользователи могут создавать привычки,
 получать напоминания и отслеживать их выполнение. Это приложение является учебным проектом, реализованным с
 использованием Django и Django REST Framework для бэкенда, Celery для отложенных задач, и интеграцией с Telegram для
 отправки уведомлений.
@@ -30,8 +30,8 @@ Habit Tracker
 Установка
 
 1. Клонируйте репозиторий:
-   git clone https://github.com/yourusername/habit-tracker.git
-   cd habit-tracker
+   git clone https://github.com/yourusername/habit-config.git
+   cd habit-config
 2. Создайте файл .env
 
 # PostgreSQL Database Credentials

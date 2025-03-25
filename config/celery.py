@@ -4,10 +4,10 @@ from celery.schedules import crontab  # Для периодического за
 # Устанавливаем настройки Django для использования Celery
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tracker.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 # Создаем экземпляр приложения Celery
-app = Celery("tracker")
+app = Celery("config")
 
 # Загружаем настройки из файла settings.py
 app.config_from_object("django.conf:settings", namespace="CELERY")
