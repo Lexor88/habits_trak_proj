@@ -1,13 +1,13 @@
 services:
   redis:
     image: redis:latest
-    restart: on-failure
+    restart: always
     expose:
       - "6379"
 
   db:
     image: postgres:14-alpine
-    restart: on-failure
+    restart: always
     env_file:
       - .env
     expose:
@@ -15,7 +15,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U my_user -d my_database"]
       interval: 10s
       retries: 5
       timeout: 5s
@@ -25,7 +25,7 @@ services:
     tty: true
     ports:
       - "8000:8000"
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    entrypoint: ["sh", "-c", "python manage.py migrate && exec python manage.py runserver 0.0.0.0:8000"]
     depends_on:
       db:
         condition: service_healthy
@@ -38,7 +38,7 @@ services:
     build: .
     tty: true
     command: celery -A config worker -l INFO
-    restart: on-failure
+    restart: always
     volumes:
       - .:/app
     depends_on:
@@ -52,7 +52,7 @@ services:
     build: .
     tty: true
     command: celery -A config beat -l INFO
-    restart: on-failure
+    restart: always
     volumes:
       - .:/app
     depends_on:
