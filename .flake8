@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .venv,
+    .tox,
+    .nox,
+    .coverage,
+    build,
+    dist,
+    .venv/lib/python3.9/site-packages/setuptools/

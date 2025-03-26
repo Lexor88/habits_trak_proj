@@ -16,7 +16,9 @@ class Habit(models.Model):
         default=1
     )  # Периодичность (1 - ежедневно, 2 - раз в 2 дня и т.д.)
     reward = models.CharField(max_length=255, blank=True, null=True)
-    execution_time = models.PositiveIntegerField(default=120)  # Время выполнения (не более 120 секунд)
+    execution_time = models.PositiveIntegerField(
+        default=120
+    )  # Время выполнения (не более 120 секунд)
     is_public = models.BooleanField(default=False)
 
     def clean(self):
@@ -24,16 +26,22 @@ class Habit(models.Model):
 
         # Если привычка приятная, то нельзя одновременно указать вознаграждение или связанную привычку
         if self.is_pleasant and (self.reward or self.related_habit):
-            raise ValidationError("Pleasant habits cannot have a reward or related habit.")
+            raise ValidationError(
+                "Pleasant habits cannot have a reward or related habit."
+            )
 
         # Если привычка полезная (не приятная), то должно быть либо вознаграждение, либо связанная привычка
         if not self.is_pleasant:
             if not (self.reward or self.related_habit):
-                raise ValidationError("Useful habits must have either a reward or a related habit.")
+                raise ValidationError(
+                    "Useful habits must have either a reward or a related habit."
+                )
 
             # Полезная привычка не может иметь одновременно и вознаграждение, и связанную привычку
             if self.reward and self.related_habit:
-                raise ValidationError("Useful habits cannot have both a reward and a related habit.")
+                raise ValidationError(
+                    "Useful habits cannot have both a reward and a related habit."
+                )
 
             # Связанная привычка должна быть приятной
             if self.related_habit and not self.related_habit.is_pleasant:

@@ -15,7 +15,9 @@ class HabitViewSet(viewsets.ModelViewSet):
         """Возвращает привычки пользователя и публичные привычки."""
         user = self.request.user
         if user.is_authenticated:
-            return Habit.objects.filter(user=user) | Habit.objects.filter(is_public=True)
+            return Habit.objects.filter(user=user) | Habit.objects.filter(
+                is_public=True
+            )
         raise PermissionDenied("You do not have access to this habit")
 
     def perform_create(self, serializer):
