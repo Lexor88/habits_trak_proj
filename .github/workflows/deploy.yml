@@ -56,7 +56,7 @@ jobs:
 
       - name: Wait for DB to be ready
         run: |
-          until pg_isready -h db -U habit_user -d habit_db; do  # Используем db вместо postgres
+          until pg_isready -h db -U my_user -d my_database; do  # Используем db вместо postgres
             echo "Waiting for database to be ready..."
             sleep 2
           done
