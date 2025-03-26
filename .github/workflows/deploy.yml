@@ -1,4 +1,4 @@
-name: Deploy to Remote Server
+name: CI/CD Pipeline
 
 on:
   push:
@@ -10,32 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    # Step 1: Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
+    # Step 2: Set up Python
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-django pytest-cov
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-django pytest-cov
 
-      - name: Run tests
-        run: pytest --cov=.
+    # Step 4: Set environment variable for Django
+    - name: Set environment variable for Django
+      run: echo "DJANGO_SETTINGS_MODULE=config.settings" >> $GITHUB_ENV
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd ~/habits_trak_proj
-            git pull origin main
-            source venv/bin/activate
-            pip install -r requirements.txt
-            sudo systemctl restart habits
+    # Step 5: Run tests
+    - name: Run tests
+      run: pytest --cov=.
+
+    # Step 6: Deploy application if tests pass
+    - name: Deploy to server
+      if: success()
+      run: |
+        echo "Deploying to server..."
+        # Add your deployment commands here
