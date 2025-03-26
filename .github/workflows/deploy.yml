@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          sshpass -p root ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "cd var/www/Project_5_Habit_Tracker && git pull" << 'EOF'
+          sshpass -p root ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "cd habits_trak_proj && git pull" << 'EOF'
           docker compose down
           docker container prune -f
           docker image prune -f
